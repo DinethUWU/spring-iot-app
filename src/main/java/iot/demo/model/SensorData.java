@@ -1,47 +1,40 @@
 package iot.demo.model;
 
-import java.io.Serializable;
+public class SensorData{
 
+    private String sensorLocation;
 
-public class SensorData implements Serializable {
+    private String humidityValue;
 
-    private String sensorType;
-
-    private String sensorValue;
-
-    private String timeStamp;
+    private String temperatureValue;
 
     public SensorData(){
 
     }
 
-    public SensorData(String sensor1Value, String sensorValue, String timeStamp){
-        this.sensorType=sensor1Value;
-        this.sensorValue=sensorValue;
-        this.timeStamp=timeStamp;
+
+    public String getSensorLocation() {
+        return sensorLocation;
     }
 
-    public String getSensorType() {
-        return sensorType;
+    public void setSensorLocation(String sensorLocation) {
+        this.sensorLocation = sensorLocation;
     }
 
-    public void setSensorType(String sensorType) {
-        this.sensorType = sensorType;
+    public String getHumidityValue() {
+        return humidityValue;
     }
 
-    public String getSensorValue() {
-        return sensorValue;
+    public void setHumidityValue(String humidityValue) {
+        this.humidityValue = humidityValue;
     }
 
-    public void setSensorValue(String sensorValue) {
-        this.sensorValue = sensorValue;
+    public String getTemperatureValue() {
+        return temperatureValue;
     }
 
-    public String getTimeStamp() {
-        return timeStamp;
+    public void setTemperatureValue(String temperatureValue) {
+        this.temperatureValue = temperatureValue;
     }
 
-    public void setTimeStamp(String timeStamp) {
-        this.timeStamp = timeStamp;
-    }
 }

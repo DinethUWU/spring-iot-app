@@ -1,15 +1,16 @@
 package iot.demo.controller;
 
-
+import iot.demo.config.RedisUtil;
 import iot.demo.model.SensorData;
-import iot.demo.repository.RedisRepository;
+import iot.demo.util.Constants;
+import iot.demo.util.DataMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import java.util.Map;
 
 @Controller
@@ -17,24 +18,27 @@ import java.util.Map;
 public class WebController {
 
     @Autowired
-    private RedisRepository redisRepository;
+    private RedisUtil util;
+
+    private JedisPool jedisPool = null;
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseEntity<?> add(
             @RequestBody SensorData sensorData) {
-        redisRepository.add(sensorData);
+        jedisPool = util.getJedisPool();
+        try (Jedis jedis = jedisPool.getResource()) {
+            jedis.hmset(Constants.SENSOR_TYPE, DataMapper.getDHT11DataMap(sensorData));
+        }
         return new ResponseEntity<SensorData>(HttpStatus.OK);
     }
 
-    @RequestMapping("/getAllData")
-    public @ResponseBody
-    Map<String, String> findAll() {
-        Map<Object, Object> aa = redisRepository.findSensorData();
-        Map<String, String> map = new HashMap<String, String>();
-        for(Map.Entry<Object, Object> entry : aa.entrySet()){
-            String key = (String) entry.getKey();
-            map.put(key, aa.get(key).toString());
+    @RequestMapping(value ="/getData/{sensorId}", method = RequestMethod.GET)
+    public @ResponseBody Map<String,String> findValue(@PathVariable String sensorId) {
+       Map<String,String> retrieveMap=null;
+        jedisPool = util.getJedisPool();
+        try (Jedis jedis = jedisPool.getResource()) {
+           retrieveMap = jedis.hgetAll(sensorId);
         }
-        return map;
+        return retrieveMap;
     }
 }

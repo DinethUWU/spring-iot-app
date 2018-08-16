@@ -16,7 +16,7 @@ import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
 @ComponentScan("iot.demo")
-public class RedisCacheConfig {
+public class RedisUtil {
 
     private static JedisPool jedisPool;
     /**
@@ -25,7 +25,7 @@ public class RedisCacheConfig {
     public void initializeJedisPool() {
         if (jedisPool == null) {
             jedisPool = new JedisPool(new JedisPoolConfig(),
-                   "localhost",
+                   "127.0.0.1",
                     6379,
                     100);
 
@@ -54,6 +54,18 @@ public class RedisCacheConfig {
         }
     }
 
+    @Bean
+    JedisConnectionFactory jedisConnectionFactory() {
+        return new JedisConnectionFactory();
+    }
+
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate() {
+        final RedisTemplate<String, Object> template = new RedisTemplate<String, Object>();
+        template.setConnectionFactory(jedisConnectionFactory());
+        template.setValueSerializer(new GenericToStringSerializer<Object>(Object.class));
+        return template;
+    }
 
 
 }
