@@ -24,8 +24,7 @@ public class WebController {
         jedisPool = util.getJedisPool();
         try (Jedis jedis = jedisPool.getResource()) {
            String key=getListKey(sensorData.getSensorType(),sensorData.getSensorLocation());
-           long numOfData=jedis.llen(key);
-           retrieveMap = jedis.lrange(key, numOfData-reqData, -1);
+           retrieveMap = jedis.lrange(key, 0, reqData);
         }
         return retrieveMap;
     }
