@@ -8,10 +8,21 @@ public class SensorData{
 
     private String temperatureValue;
 
+    private String sensorType;
+
+    private int dataAmount;
+
     public SensorData(){
 
     }
 
+    public String getSensorType() {
+        return sensorType;
+    }
+
+    public void setSensorType(String sensorType) {
+        this.sensorType = sensorType;
+    }
 
     public String getSensorLocation() {
         return sensorLocation;
