@@ -1,5 +1,6 @@
 package iot.demo.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -14,15 +15,25 @@ import redis.clients.jedis.JedisPoolConfig;
 public class RedisUtil {
 
     private static JedisPool jedisPool;
+
+    @Value("${spring.redis.host}")
+    String redisHost;
+
+    @Value("${spring.redis.port}")
+    int redisPort;
+
+    @Value("${redis.timeout}")
+    int redisTimeout;
+
     /**
      * Initialize Jedis Pool with Default Timeout
      */
     public void initializeJedisPool() {
         if (jedisPool == null) {
             jedisPool = new JedisPool(new JedisPoolConfig(),
-                   "127.0.0.1",
-                    6379,
-                    100);
+                   this.redisHost,
+                    this.redisPort,
+                    this.redisTimeout);
 
         }
     }
